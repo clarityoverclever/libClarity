@@ -13,10 +13,12 @@
 # source function parser
 . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
 
-# scan for public functions and source them
 try {
+    # categorize functions
     [object] $groupedByDomain = (Get-FunctionMap).GetEnumerator() | Group-Object { $_.Value.Domain }
+
     foreach ($domainGroup in $groupedByDomain) {
+        # source private functions
         if ($domainGroup.Name.ToLower() -eq 'private') {
             foreach ($function in $domainGroup.Group) {
                 $name = $function.Key
@@ -29,14 +31,13 @@ try {
                 }
             }
         }
-
+        # export public functions
         if ($domainGroup.Name.ToLower()-eq 'public') {
             foreach ($function in $domainGroup.Group) {
                 $name = $function.Key
                 $file = $function.Value.Path
 
                 try {
-                    Write-Host "exporting $name"
                     . $file
                     Export-ModuleMember -Function $name
                 } catch {
