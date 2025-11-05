@@ -2,34 +2,35 @@
 # Author:    Keith Marshall
 # Domain:    Private
 # Role:      Helper
-# Platform:  CrossPlatform
+# Platform:  CrossPlatform (Tested: Linux)
+# Edition:   Core
 # PSVersion: >=7.2
 # ---
 
+<#
+.SYNOPSIS
+Scans a PowerShell module folder and returns metadata about each function.
+
+.DESCRIPTION
+This function recursively scans `.ps1` files in a module directory, extracts function names,
+and reads metadata tags from comments. It returns a hashtable
+mapping each function to its file path and metadata.
+
+.PARAMETER RootPath
+The root path of the module to scan. Defaults to the parent of the current script's location.
+
+.EXAMPLE
+Get-FunctionMap -RootPath "C:\MyModule"
+
+.NOTES
+If script has no declared functions, the name will default to the file name.
+Metadata must be declared at the top of the file betweem two lines containing only # ---
+
+.LINK
+https://github.com/clarityoverclever/libClarity/blob/main/Private/
+#>
+
 function Get-FunctionMap {
-    <#
-    .SYNOPSIS
-    Scans a PowerShell module folder and returns metadata about each function.
-
-    .DESCRIPTION
-    This function recursively scans `.ps1` files in a module directory, extracts function names,
-    and reads metadata tags from comments. It returns a hashtable
-    mapping each function to its file path and metadata.
-
-    .PARAMETER RootPath
-    The root path of the module to scan. Defaults to the parent of the current script's location.
-
-    .EXAMPLE
-    Get-FunctionMap -RootPath "C:\MyModule"
-
-    .NOTES
-    If script has no declared functions, the name will default to the file name.
-    Metadata must be declared at the top of the file betweem two lines containing only # ---
-
-    .LINK
-    https://clarityoverclever.github.io/
-    #>
-
     param (
         [string] $RootPath = $(Get-Item -Path $PsScriptRoot).Parent.FullName
     )
@@ -61,7 +62,7 @@ function Get-FunctionMap {
         }
 
         # test script file for valid metadata structure
-        $requiredKeys = 'Domain','Role','Platform','PSVersion','Author'
+        $requiredKeys = 'Domain','Role','Platform','Edition','PSVersion','Author'
         foreach ($key in $requiredKeys) {
             if (-not $metadata.ContainsKey($key)) {
                 Write-Warning "Missing required metadata key: $key"
@@ -87,6 +88,7 @@ function Get-FunctionMap {
                     Domain    = $metadata.Domain.Trim()
                     Role      = $metadata.Role.Trim()
                     Platform  = $metadata.Platform.Trim()
+                    Edition   = $metadata.Edition.Trim()
                     PSVersion = $metadata.PSVersion.Trim()
                 }
             }
