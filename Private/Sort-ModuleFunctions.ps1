@@ -66,6 +66,10 @@ function Sort-ModuleFunctions {
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
     )
 
+    # enforce strict behaviors
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
+
     # source function parser
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
     . (Join-Path -Path $PrivatePath -ChildPath 'ConvertTo-TitleCase.ps1')
@@ -116,4 +120,5 @@ function Sort-ModuleFunctions {
         }
     }
 }
+
 Sort-ModuleFunctions

@@ -58,10 +58,14 @@
 
 function Build-Readme {
     param (
-        [string] $RootPath    = $(Get-Item -Path $PsScriptRoot).Parent.FullName,
+        [string] $RootPath    = (Get-Item -Path $PsScriptRoot).Parent.FullName,
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private'),
         [string] $RepoRoot    = 'https://github.com/clarityoverclever/libClarity/blob/main'
     )
+
+    # enforce strict behaviors
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
 
     # source function parser
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
@@ -69,7 +73,7 @@ function Build-Readme {
     $markdown  = @()
     $markdown += "# Module Manifest`n"
     $markdown += "This document lists all functions in the module, grouped by domain and annotated with metadata.`n"
-    $markdown += "Generated on $(Get-Date -Format 'yyyy-MM-dd HH:mm')`n`n"
+    $markdown += "`n"
     $markdown += "## Table of Contents`n"
 
     [object] $groupedByDomain = (Get-FunctionMap).GetEnumerator() | Group-Object { $_.Value.Domain }

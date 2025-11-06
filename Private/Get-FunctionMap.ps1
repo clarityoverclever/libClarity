@@ -27,13 +27,17 @@ If script has no declared functions, the name will default to the file name.
 Metadata must be declared at the top of the file betweem two lines containing only # ---
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Private/
+https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMap.ps1
 #>
 
 function Get-FunctionMap {
     param (
-        [string] $RootPath = $(Get-Item -Path $PsScriptRoot).Parent.FullName
+        [string] $RootPath = (Get-Item -Path $PsScriptRoot).Parent.FullName
     )
+
+    # enforce strict behaviors
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
 
     [hashtable] $functionMap = @{}
 
