@@ -65,7 +65,8 @@ function Get-FunctionMap {
         $requiredKeys = 'Domain','Role','Platform','Edition','PSVersion','Author'
         foreach ($key in $requiredKeys) {
             if (-not $metadata.ContainsKey($key)) {
-                Write-Warning "Missing required metadata key: $key"
+                Write-Warning "$file missing required metadata key: $key"
+                return
             }
         }
 
