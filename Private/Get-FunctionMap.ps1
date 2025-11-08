@@ -32,12 +32,22 @@ https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMa
 
 function Get-FunctionMap {
     param (
-        [string] $RootPath = (Get-Item -Path $PsScriptRoot).Parent.FullName
+        [string] $RootPath = (Split-Path -Path $PSScriptRoot -Parent)
     )
 
     # enforce strict behaviors
     Set-StrictMode -Version Latest
     $ErrorActionPreference = 'Stop'
+
+    # define metadata schema for key validation
+    [hashtable] $metadataSchema = @{
+        author    = @{ required = $false }
+        domain    = @{ required = $true }
+        role      = @{ required = $true }
+        platform  = @{ required = $false }
+        edition   = @{ required = $false }
+        psversion = @{ required = $false }
+    }
 
     [hashtable] $functionMap = @{}
 
@@ -60,41 +70,54 @@ function Get-FunctionMap {
             # load metadata into a hashtable
             if ($inMetadata -and $line -match '^#\s*(\w+)\s*:\s*(.+)$') {
                 $key            = $Matches[1].Trim().ToLower()
-                $value          = $Matches[2].Trim().ToLower()
+                $value          = $Matches[2].Trim()
+
+                # values are normalized lowercase and trimmed
                 $metadata[$key] = $value
             }
         }
 
         # test script file for valid metadata structure
-        $requiredKeys = 'Domain','Role','Platform','Edition','PSVersion','Author'
-        foreach ($key in $requiredKeys) {
-            if (-not $metadata.ContainsKey($key)) {
-                Write-Warning "$file missing required metadata key: $key"
+        foreach ($key in $metadataSchema.Keys) {
+            # test for required keys and stop processing if found
+            if ($metadataSchema[$key].required -and -not $metadata.ContainsKey($key)) {
+                Write-Warning "[REQUIRED] $file missing required metadata key: $key"
                 return
+            }
+
+            # test for recommended keys and warn if found
+            if (-not $metadataSchema[$key].required -and -not $metadata.ContainsKey($key)) {
+                Write-Warning "[RECOMMENDED] $file missing recommended metadata key: $key"
+                $metadata[$key] = 'unknown'
             }
         }
 
-        # get function name and skip files where no function is declared
-        $name = ($contents | Where-Object {
-                $_ -match '^\s*function\s+\w+' -and ($_ -notmatch '^\s*#')
-            }) -replace '.*function\s+([^\s{]+).*', '$1'
-        
-        if (-not $name) {
-            return
+        # get function(s) name and skip files where no function is declared
+        $names = @(
+            $contents | Where-Object { $_ -match '^\s*function\s+\w+' -and ($_ -notmatch '^\s*#') } |
+            ForEach-Object { ($_ -replace '.*function\s+([^\s{]+).*', '$1').Trim() }
+        )
+
+        # ensure $names even if no functions are found
+        if (-not $names) {
+            $names = @()
         }
 
-        if ($metadata) {
-            if ($functionMap.ContainsKey($name)) {
-                Write-Warning "Duplicate function '$name' found in $file"
-            } else {
-                $functionMap[$name] = @{
-                    Path      = $file
-                    Author    = $metadata.Author.Trim()
-                    Domain    = $metadata.Domain.Trim()
-                    Role      = $metadata.Role.Trim()
-                    Platform  = $metadata.Platform.Trim()
-                    Edition   = $metadata.Edition.Trim()
-                    PSVersion = $metadata.PSVersion.Trim()
+        # add functions to function map
+        foreach ($name in $names) {
+            if ($metadata) {
+                if ($functionMap.ContainsKey($name)) {
+                    Write-Warning "Duplicate function '$name' found in $file"
+                } else {
+                    $functionMap[$name] = @{
+                        path      = $file
+                        author    = $metadata.author
+                        domain    = $metadata.domain
+                        role      = $metadata.role
+                        platform  = $metadata.platform
+                        edition   = $metadata.edition
+                        psversion = $metadata.psversion
+                    }
                 }
             }
         }
