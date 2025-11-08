@@ -8,8 +8,8 @@
 # ---
 
 # Define root path
-[string] $RootPath    = (Get-Item -Path $PSScriptRoot).Parent.FullName
-[string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
+[string] $RootPath    = Split-Path -Path $PSScriptRoot -Parent
+[string] $PrivatePath = Join-Path -Path $RootPath -ChildPath 'Private'
 
 # source function parser
 . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
@@ -19,9 +19,9 @@ try {
     [object] $groupedByDomain = (Get-FunctionMap).GetEnumerator() | Group-Object { $_.Value.Domain }
 
     foreach ($domainGroup in $groupedByDomain) {
-        switch -Regex ($domainGroup.Name.ToLower()) {
+        switch -Regex ($domainGroup.Name) {
         
-            'private' { # source private functions
+            'private' { # load private functions
                 foreach ($function in $domainGroup.Group) {
                     $name = $function.Key
                     $file = $function.Value.Path
@@ -30,12 +30,12 @@ try {
                         . $file
                         Write-Verbose "Loaded Private function: $name"
                     } catch {
-                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)"
+                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
                     }
                 }
             }
 
-            'Public' { # export public functions
+            'public' { # export public functions
                 foreach ($function in $domainGroup.Group) {
                     $name = $function.Key
                     $file = $function.Value.Path
@@ -45,9 +45,14 @@ try {
                         Export-ModuleMember -Function $name
                         Write-Verbose "Exported Public function: $name"
                     } catch {
-                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)"
+                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
+
                     }
                 }
+            }
+
+            default {
+                Write-Verbose "Skipped unrecognized domain: $($domainGroup.Name)"
             }
         }
     }

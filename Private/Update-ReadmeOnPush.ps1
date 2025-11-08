@@ -24,7 +24,7 @@ https://github.com/clarityoverclever/libClarity/blob/main/Private/Update-ReadmeO
 
 function Update-ReadmeOnPush {
     param (
-        [string] $RootPath    = (Get-Item -Path $PsScriptRoot).Parent.FullName,
+        [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
     )
 
@@ -35,7 +35,7 @@ function Update-ReadmeOnPush {
     # source helpers
     . (Join-Path -Path $PrivatePath -ChildPath 'Build-Readme.ps1')
 
-    [string] $readmePath  = (Join-Path -Path $RootPath -ChildPath 'README.md')
+    [string] $readmePath  = Join-Path -Path $RootPath -ChildPath 'README.md'
     [string] $readmeHash  = (Get-FileHash -Algorithm MD5 -Path $readmePath).Hash
 
     & Build-Readme

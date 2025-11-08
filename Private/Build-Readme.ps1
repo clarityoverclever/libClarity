@@ -58,7 +58,7 @@
 
 function Build-Readme {
     param (
-        [string] $RootPath    = (Get-Item -Path $PsScriptRoot).Parent.FullName,
+        [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private'),
         [string] $RepoRoot    = 'https://github.com/clarityoverclever/libClarity/blob/main'
     )
@@ -80,7 +80,7 @@ function Build-Readme {
 
     foreach ($domainGroup in $groupedByDomain) {
         $domain    = $domainGroup.Name
-        $markdown += "- [$domain](#$($domain.ToLower()))`n"
+        $markdown += "- [$domain](#$($domain))`n"
     }
 
     $markdown += "`n"
@@ -93,8 +93,8 @@ function Build-Readme {
 
         foreach ($function in $($domainGroup.Group) | Sort-Object Key) {
             $info          = $function.Value
-            $functionPath  = (Resolve-Path -Relative $info.Path) -replace '^[.\\\/]+', '' -replace '\\', '/'
-            $githubLink    = ($RepoRoot, $functionPath -join '/')
+            $functionPath  = (Resolve-Path -Relative $info.Path -RelativeBasePath $RootPath) -replace '^[.\\\/]+', '' -replace '\\', '/'
+            $githubLink    = $RepoRoot, $functionPath -join '/'
             $markdown     += "| $($function.Key) | $($info.Role) | $($info.Platform) | $($info.Edition) | $($info.PSVersion) | [$($function.Key).ps1]($githubLink) |"
         }
 
@@ -103,3 +103,4 @@ function Build-Readme {
 
     $markdown -join "`n" | Set-Content -Path (Join-Path -Path $RootPath -ChildPath README.md)
 }
+Build-Readme
