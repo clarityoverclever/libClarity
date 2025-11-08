@@ -44,17 +44,24 @@ function Update-ReadmeOnPush {
 
     if ($readmeHash -ne $updatedHash) {
         [string] $lastCommitMessage = git log -1 --pretty=%B
-        [string] $newCommitMessage  = "$lastCommitMessage`n`nIncludes auto-updated README.md"
 
-        Write-Host "README.md has been updated automatically; staging changes..."
-        git add $readmePath
+        if ($lastCommitMessage -notmatch 'Includes auto-updated README.md') {
+            [string] $newCommitMessage  = "$lastCommitMessage`n`nIncludes auto-updated README.md"
 
-        Write-Host "squashing the README update into last commit"
-        git commit --amend -m $newCommitMessage
+            Write-Host "README.md has been updated automatically; staging changes. . ."
+            git add $readmePath
+
+            Write-Host "squashing the README update into last commit"
+            git commit --amend -m $newCommitMessage
+
+            Write-Host "Re-push after README update. . ."
+            git push
+        } else {
+            Write-Verbose "README already amended; no action taken."
+        }
     } else {
         Write-Host "README unchanged since last commit"
     }
-
     Write-Host "exiting pre-push checks"
 }
 
