@@ -57,7 +57,7 @@ formerly Sort-ModuleFunctions()
 
 .LINK
 Export-ModuleMember
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Sort-ModuleFunctions.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/Private/Set-ModuleFunctionGroup.ps1
 https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMap.ps1
 https://github.com/clarityoverclever/libClarity/blob/main/Private/ConvertTo-TitleCase
 #>
