@@ -13,7 +13,7 @@ Sorts and organizes PowerShell module function scripts into their appropriate
 locations based on metadata extracted from each file.
 
 .DESCRIPTION
-The Sort-ModuleFunctions function enforces a consistent directory structure
+The Set-ModuleFunctionGroupfunction enforces a consistent directory structure
 within a PowerShell module by analyzing function metadata (Domain and Role)
 and automatically relocating function script files to their proper folders.
 
@@ -39,7 +39,7 @@ Analyzes all module scripts, then moves Private functions into the /Private
 folder and Public functions into their respective Role folders under the root.
 
 .EXAMPLE
-PS C:\> Sort-ModuleFunctions -Verbose
+PS C:\> Set-ModuleFunctionGroup-Verbose
 
 Runs the sorter in verbose mode to display detailed information about file
 movements, created directories, and detected function metadata.
@@ -52,6 +52,9 @@ You cannot pipe objects to this function.
 None.  
 This function performs file system operations and does not return output.
 
+.NOTES
+formerly Sort-ModuleFunctions()
+
 .LINK
 Export-ModuleMember
 https://github.com/clarityoverclever/libClarity/blob/main/Private/Sort-ModuleFunctions.ps1
@@ -60,9 +63,9 @@ https://github.com/clarityoverclever/libClarity/blob/main/Private/ConvertTo-Titl
 #>
 
 
-function Sort-ModuleFunctions {
+function Set-ModuleFunctionGroup {
     param (
-        [string] $RootPath    = $(Get-Item -Path $PsScriptRoot).Parent.FullName,
+        [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
     )
 
@@ -82,13 +85,13 @@ function Sort-ModuleFunctions {
         $domain = $_.Value.Domain
         $role   = $_.Value.Role
 
-        # skip files missing domain metadata to prevent $null exceptions on $domain.ToLower()
+        # skip files missing domain metadata to prevent $null exceptions on $domain
         if (-not $domain) {
             Write-Warning "Function '$name' has no Domain metadata — skipping."
             return
         }
 
-        switch -Regex ($domain.ToLower()) {
+        switch -Regex ($domain) {
             'private' { # move private functions to /Private
                 if ((Split-Path -Path $path -Parent) -ne $PrivatePath) {
                     try {
@@ -120,5 +123,3 @@ function Sort-ModuleFunctions {
         }
     }
 }
-
-Sort-ModuleFunctions
