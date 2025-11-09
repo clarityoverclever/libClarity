@@ -71,6 +71,7 @@ function Build-Readme {
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
 
     $markdown  = @()
+    $markdown += "Companion function library for https://clarityoverclever.github.io/`n"
     $markdown += "# Module Manifest`n"
     $markdown += "This document lists all functions in the module, grouped by domain and annotated with metadata.`n"
     $markdown += "`n"

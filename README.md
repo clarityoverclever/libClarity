@@ -1,3 +1,5 @@
+Companion function library for https://clarityoverclever.github.io/
+
 # Module Manifest
 
 This document lists all functions in the module, grouped by domain and annotated with metadata.
