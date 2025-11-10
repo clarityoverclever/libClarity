@@ -45,10 +45,6 @@
     in the module's root directory, based on the function map located in the `Private` folder.
 
 .NOTES
-    Author: Keith Marshall
-    Version: 1.0.0
-    Platform: CrossPlatform (Tested on Linux)
-    PSVersion: >=7.2
     This function assumes the existence of a `Get-FunctionMap.ps1` script in the `Private` folder, which contains 
     the function metadata required to generate the README.
 

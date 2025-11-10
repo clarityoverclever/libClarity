@@ -23,7 +23,6 @@ The root path of the module to scan. Defaults to the parent of the current scrip
 Get-FunctionMap -RootPath "C:\MyModule"
 
 .NOTES
-If script has no declared functions, the name will default to the file name.
 Metadata must be declared at the top of the file betweem two lines containing only # ---
 
 .LINK
