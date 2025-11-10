@@ -10,6 +10,8 @@ This document lists all functions in the module, grouped by domain and annotated
 
 - [Private](#Private)
 
+- [Public](#Public)
+
 
 
 ## Private
@@ -21,5 +23,12 @@ This document lists all functions in the module, grouped by domain and annotated
 | Get-FunctionMap | Helper | CrossPlatform (Tested: Linux) | Core | >=7.2 | [Get-FunctionMap.ps1](https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMap.ps1) |
 | Set-ModuleFunctionGroup | Helper | CrossPlatform (Tested: Linux) | Core | >=7.2 | [Set-ModuleFunctionGroup.ps1](https://github.com/clarityoverclever/libClarity/blob/main/Private/Set-ModuleFunctionGroup.ps1) |
 | Update-ReadmeOnPush | Helper | CrossPlatform (Tested: Linux) | Core | >=7.2 | [Update-ReadmeOnPush.ps1](https://github.com/clarityoverclever/libClarity/blob/main/Private/Update-ReadmeOnPush.ps1) |
+
+
+## Public
+
+| Function | Role | Platform | Edition | PSVersion | Link |
+|:---------|:-----|:---------|:--------|:----------|:-----|
+| Write-Log | Logging | CrossPlatform (Tested: Linux) | Core | >=7.2 | [Write-Log.ps1](https://github.com/clarityoverclever/libClarity/blob/main/Logging/Write-Log.ps1) |
 
 
