@@ -1,4 +1,4 @@
-# ---
+﻿# ---
 # Author:    Keith Marshall
 # Domain:    Private
 # Role:      Helper
@@ -33,27 +33,24 @@ Specifies the path to the Private function directory within the module.
 Defaults to '<RootPath>\Private'.
 
 .EXAMPLE
-PS C:\> Sort-ModuleFunctions
+PS C:\> Set-ModuleFunctionGroup
 
 Analyzes all module scripts, then moves Private functions into the /Private
 folder and Public functions into their respective Role folders under the root.
 
 .EXAMPLE
-PS C:\> Set-ModuleFunctionGroup-Verbose
+PS C:\> Set-ModuleFunctionGroup -Verbose
 
 Runs the sorter in verbose mode to display detailed information about file
 movements, created directories, and detected function metadata.
 
 .INPUTS
-None.  
+None.
 You cannot pipe objects to this function.
 
 .OUTPUTS
-None.  
+None.
 This function performs file system operations and does not return output.
-
-.NOTES
-formerly Sort-ModuleFunctions()
 
 .LINK
 Export-ModuleMember
@@ -123,3 +120,6 @@ function Set-ModuleFunctionGroup {
         }
     }
 }
+
+
+

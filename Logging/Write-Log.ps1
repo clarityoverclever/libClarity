@@ -12,8 +12,8 @@
 Writes a timestamped log entry to a specified file, optionally formatted as JSON.
 
 .DESCRIPTION
-The Write-Log function generates a structured log entry with a timestamp and log level, 
-then writes it to a file. It supports plain text or JSON output formats and helps 
+The Write-Log function generates a structured log entry with a timestamp and log level,
+then writes it to a file. It supports plain text or JSON output formats and helps
 standardize logging across automation scripts.
 
 .PARAMETER LogLevel
@@ -54,7 +54,7 @@ function Write-Log {
         [string] $Path,
         [switch] $ToJson
     )
-    
+
     [string] $time = Get-Date -Format yyyy-MM-ddTHH:mm:ss # ISO 8601 format
 
     if ($ToJson) {

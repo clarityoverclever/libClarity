@@ -1,4 +1,4 @@
-# ---
+﻿# ---
 # Author:    Keith Marshall
 # Domain:    Private
 # Role:      Helper
@@ -63,3 +63,4 @@ Get-ChildItem -Path $hookSrcDir -File | ForEach-Object {
 }
 
 Write-Host "`n✅ Git hooks installed successfully."
+
