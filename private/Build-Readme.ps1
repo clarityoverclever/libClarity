@@ -49,13 +49,13 @@
     the function metadata required to generate the README.
 
 .LINK
-    https://github.com/clarityoverclever/libClarity/blob/main/Private/Build-Readme.ps1
+    https://github.com/clarityoverclever/libClarity/blob/main/private/Build-Readme.ps1
 #>
 
 function Build-Readme {
     param (
         [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
-        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private'),
+        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'private'),
         [string] $RepoRoot    = 'https://github.com/clarityoverclever/libClarity/blob/main'
     )
 
@@ -100,4 +100,3 @@ function Build-Readme {
 
     $markdown -join "`n" | Set-Content -Path (Join-Path -Path $RootPath -ChildPath README.md)
 }
-Build-Readme

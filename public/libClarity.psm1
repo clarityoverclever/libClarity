@@ -9,7 +9,7 @@
 
 # Define root path
 [string] $RootPath    = Split-Path -Path $PSScriptRoot -Parent
-[string] $PrivatePath = Join-Path -Path $RootPath -ChildPath 'Private'
+[string] $PrivatePath = Join-Path -Path $RootPath -ChildPath 'private'
 
 # source function parser
 . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')

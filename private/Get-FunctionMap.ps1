@@ -26,7 +26,7 @@ Get-FunctionMap -RootPath "C:\MyModule"
 Metadata must be declared at the top of the file betweem two lines containing only # ---
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMap.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/Get-FunctionMap.ps1
 #>
 
 function Get-FunctionMap {
@@ -111,10 +111,10 @@ function Get-FunctionMap {
                     $functionMap[$name] = @{
                         path      = $file
                         author    = $metadata.author
-                        domain    = $metadata.domain
-                        role      = $metadata.role
-                        platform  = $metadata.platform
-                        edition   = $metadata.edition
+                        domain    = $metadata.domain.ToLower()
+                        role      = $metadata.role.ToLower()
+                        platform  = $metadata.platform.ToLower()
+                        edition   = $metadata.edition.ToLower()
                         psversion = $metadata.psversion
                     }
                 }

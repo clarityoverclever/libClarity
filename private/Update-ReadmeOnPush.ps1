@@ -19,13 +19,13 @@ amended into the last commit.
 Intended for use in a pre-push hook.
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Update-ReadmeOnPush.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/Update-ReadmeOnPush.ps1
 #>
 
 function Update-ReadmeOnPush {
     param (
         [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
-        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
+        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'private')
     )
 
     # enforce strict behaviors
@@ -64,5 +64,3 @@ function Update-ReadmeOnPush {
     }
     Write-Host "exiting pre-push checks"
 }
-
-Update-ReadmeOnPush

@@ -19,7 +19,7 @@ into the active .git/hooks directory. Makes them executable and ready for use.
 PS> ./Install-GitHooks.ps1
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Install-GitHooks.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/Install-GitHooks.ps1
 https://github.com/clarityoverclever/libClarity/blob/main/.githooks
 #>
 

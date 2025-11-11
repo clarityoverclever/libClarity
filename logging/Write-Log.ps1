@@ -40,7 +40,7 @@ Write-Log -Message "Connection failed" -LogLevel ERROR -Path "C:\Logs\automation
 Writes a JSON-formatted log entry with ERROR level to the specified file.
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Logging/Write-Log.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/logging/Write-Log.ps1
 https://clarityoverclever.github.io/posts/logging-how-automations-communicate/
 #>
 

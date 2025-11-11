@@ -23,7 +23,7 @@ ConvertTo-TitleCase -String "hello"
 output: Hello
 
 .LINK
-https://github.com/clarityoverclever/libClarity/blob/main/Private/ConvertTo-TitleCase.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/ConvertTo-TitleCase.ps1
 #>
 
 function ConvertTo-TitleCase ([string] $String) {

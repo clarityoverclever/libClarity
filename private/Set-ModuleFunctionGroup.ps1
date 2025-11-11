@@ -54,16 +54,16 @@ This function performs file system operations and does not return output.
 
 .LINK
 Export-ModuleMember
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Set-ModuleFunctionGroup.ps1
-https://github.com/clarityoverclever/libClarity/blob/main/Private/Get-FunctionMap.ps1
-https://github.com/clarityoverclever/libClarity/blob/main/Private/ConvertTo-TitleCase
+https://github.com/clarityoverclever/libClarity/blob/main/private/Set-ModuleFunctionGroup.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/Get-FunctionMap.ps1
+https://github.com/clarityoverclever/libClarity/blob/main/private/ConvertTo-TitleCase
 #>
 
 
 function Set-ModuleFunctionGroup {
     param (
         [string] $RootPath    = (Split-Path -Path $PSScriptRoot -Parent),
-        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'Private')
+        [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'private')
     )
 
     # enforce strict behaviors
@@ -72,15 +72,14 @@ function Set-ModuleFunctionGroup {
 
     # source function parser
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
-    . (Join-Path -Path $PrivatePath -ChildPath 'ConvertTo-TitleCase.ps1')
 
     [hashtable] $functionMap = Get-FunctionMap
 
     ($functionMap.GetEnumerator()) | ForEach-Object {
         $name   = $_.Name
         $path   = $_.Value.Path
-        $domain = $_.Value.Domain
-        $role   = $_.Value.Role
+        $domain = $_.Value.Domain.ToLower()
+        $role   = $_.Value.Role.ToLower()
 
         # skip files missing domain metadata to prevent $null exceptions on $domain
         if (-not $domain) {
@@ -101,7 +100,7 @@ function Set-ModuleFunctionGroup {
                 }
             }
             'public'  { # move Public functions to role named folders
-                [string] $RolePath = Join-Path -Path $RootPath -ChildPath (ConvertTo-TitleCase -String $Role)
+                [string] $RolePath = Join-Path -Path $RootPath -ChildPath $role
 
                 if ((Split-Path -Path $path -Parent) -ne $RolePath) {
                     try {
@@ -120,6 +119,3 @@ function Set-ModuleFunctionGroup {
         }
     }
 }
-
-
-
