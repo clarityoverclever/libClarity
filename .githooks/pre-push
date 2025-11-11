@@ -11,7 +11,7 @@ fi
 HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Move two levels up from .git/hooks to repo root, then into /Private
-SCRIPT_PATH="$HOOK_DIR/../../Private/Update-ReadmeOnPush.ps1"
+SCRIPT_PATH="$HOOK_DIR/../../private/Update-ReadmeOnPush.ps1"
 
 # Verify the script exists before attempting to run
 if [ ! -f "$SCRIPT_PATH" ]; then
