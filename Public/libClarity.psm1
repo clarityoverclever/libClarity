@@ -20,7 +20,7 @@ try {
 
     foreach ($domainGroup in $groupedByDomain) {
         switch -Regex ($domainGroup.Name) {
-        
+
             'private' { # load private functions
                 foreach ($function in $domainGroup.Group) {
                     $name = $function.Key
