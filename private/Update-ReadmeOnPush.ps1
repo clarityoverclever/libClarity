@@ -28,10 +28,6 @@ function Update-ReadmeOnPush {
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'private')
     )
 
-    # enforce strict behaviors
-    Set-StrictMode -Version Latest
-    $ErrorActionPreference = 'Stop'
-
     # source helpers
     . (Join-Path -Path $PrivatePath -ChildPath 'Build-Readme.ps1')
 

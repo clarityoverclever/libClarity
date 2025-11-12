@@ -7,6 +7,10 @@
 # PSVersion: >=7.2
 # ---
 
+# enforce strict behaviors in the module
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
 # Define root path
 [string] $RootPath    = Split-Path -Path $PSScriptRoot -Parent
 [string] $PrivatePath = Join-Path -Path $RootPath -ChildPath 'private'

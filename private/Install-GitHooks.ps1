@@ -1,4 +1,4 @@
-﻿# ---
+# ---
 # Author:    Keith Marshall
 # Domain:    Private
 # Role:      Helper
@@ -27,10 +27,6 @@ https://github.com/clarityoverclever/libClarity/blob/main/.githooks
 param (
     [string] $RepoRoot = (Get-Location).Path
 )
-
-# enforce strict behaviors
-Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
 
 # Detect .git and .githooks directories
 $gitDir     = Join-Path -Path $RepoRoot -ChildPath ".git"
@@ -63,4 +59,3 @@ Get-ChildItem -Path $hookSrcDir -File | ForEach-Object {
 }
 
 Write-Host "`n✅ Git hooks installed successfully."
-

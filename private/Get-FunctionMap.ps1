@@ -34,10 +34,6 @@ function Get-FunctionMap {
         [string] $RootPath = (Split-Path -Path $PSScriptRoot -Parent)
     )
 
-    # enforce strict behaviors
-    Set-StrictMode -Version Latest
-    $ErrorActionPreference = 'Stop'
-
     # define metadata schema for key validation
     [hashtable] $metadataSchema = @{
         author    = @{ required = $false }

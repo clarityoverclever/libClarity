@@ -1,4 +1,4 @@
-﻿# ---
+# ---
 # Author:    Keith Marshall
 # Domain:    Private
 # Role:      Helper
@@ -56,9 +56,7 @@ This function performs file system operations and does not return output.
 Export-ModuleMember
 https://github.com/clarityoverclever/libClarity/blob/main/private/Set-ModuleFunctionGroup.ps1
 https://github.com/clarityoverclever/libClarity/blob/main/private/Get-FunctionMap.ps1
-https://github.com/clarityoverclever/libClarity/blob/main/private/ConvertTo-TitleCase
 #>
-
 
 function Set-ModuleFunctionGroup {
     param (
@@ -66,16 +64,12 @@ function Set-ModuleFunctionGroup {
         [string] $PrivatePath = (Join-Path -Path $RootPath -ChildPath 'private')
     )
 
-    # enforce strict behaviors
-    Set-StrictMode -Version Latest
-    $ErrorActionPreference = 'Stop'
-
     # source function parser
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
 
     [hashtable] $functionMap = Get-FunctionMap
 
-    ($functionMap.GetEnumerator()) | ForEach-Object {
+    $functionMap.GetEnumerator() | ForEach-Object {
         $name   = $_.Name
         $path   = $_.Value.Path
         $domain = $_.Value.Domain.ToLower()
@@ -104,8 +98,8 @@ function Set-ModuleFunctionGroup {
 
                 if ((Split-Path -Path $path -Parent) -ne $RolePath) {
                     try {
-                        if (-not (Test-path -Path $RolePath)) {
-                            New-Item -ItemType Directory -Path $RolePath | Out-Null
+                        if (-not (Test-Path -Path $RolePath)) {
+                            New-Item -ItemType Directory -Path $RolePath -Force | Out-Null
                         }
 
                         Move-Item -Path $path -Destination $RolePath

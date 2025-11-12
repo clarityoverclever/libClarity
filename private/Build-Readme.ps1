@@ -59,10 +59,6 @@ function Build-Readme {
         [string] $RepoRoot    = 'https://github.com/clarityoverclever/libClarity/blob/main'
     )
 
-    # enforce strict behaviors
-    Set-StrictMode -Version Latest
-    $ErrorActionPreference = 'Stop'
-
     # source function parser
     . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
 
