@@ -85,6 +85,11 @@ function Set-ModuleFunctionGroup {
             'private' { # move private functions to /private/$role except module helpers
                 [string] $PrivateRolePath = Join-Path -Path $PrivatePath -ChildPath $role
 
+                # ignore sorted functions
+                if ((Split-Path -Path $path -Parent) -eq $PrivateRolePath) {
+                    continue
+                }
+
                 # split module helpers out of the sub-folder sorting logic and place them in private/
                 if ($role -eq 'helper') {
                     if ((Split-Path -Path $path -Parent) -ne $PrivatePath) {
@@ -139,3 +144,4 @@ function Set-ModuleFunctionGroup {
         }
     }
 }
+Set-ModuleFunctionGroup
