@@ -19,45 +19,31 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path -Path $PrivatePath -ChildPath 'Get-FunctionMap.ps1')
 
 try {
-    # categorize functions
-    [object] $groupedByDomain = (Get-FunctionMap).GetEnumerator() | Group-Object { $_.Value.Domain }
+    # load all private functions first to ensure that helpers are available when public functons load
+    foreach ($function in (Get-FunctionMap).GetEnumerator() | Where-Object { $_.Value.Domain -eq 'private' }) {
+        $name = $function.Key
+        $file = $function.Value.Path
 
-    foreach ($domainGroup in $groupedByDomain) {
-        switch -Regex ($domainGroup.Name) {
+        try {
+            . $file
+            Write-Verbose "Loaded Private function: $name"
+        } catch {
+            Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
+        }
+    }
+   
+    # export public functions    
+    foreach ($function in (Get-FunctionMap).GetEnumerator() | Where-Object { $_.Value.Domain -eq 'public' }) {
+        $name = $function.Key
+        $file = $function.Value.Path
 
-            'private' { # load private functions
-                foreach ($function in $domainGroup.Group) {
-                    $name = $function.Key
-                    $file = $function.Value.Path
+        try {
+            . $file
+            Export-ModuleMember -Function $name
+            Write-Verbose "Exported Public function: $name"
+        } catch {
+            Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
 
-                    try {
-                        . $file
-                        Write-Verbose "Loaded Private function: $name"
-                    } catch {
-                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
-                    }
-                }
-            }
-
-            'public' { # export public functions
-                foreach ($function in $domainGroup.Group) {
-                    $name = $function.Key
-                    $file = $function.Value.Path
-
-                    try {
-                        . $file
-                        Export-ModuleMember -Function $name
-                        Write-Verbose "Exported Public function: $name"
-                    } catch {
-                        Write-Error -Message "Failed to load $($name): $($_.Exception.Message)" -Category ResourceUnavailable
-
-                    }
-                }
-            }
-
-            default {
-                Write-Verbose "Skipped unrecognized domain: $($domainGroup.Name)"
-            }
         }
     }
 } catch {

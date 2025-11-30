@@ -82,18 +82,44 @@ function Set-ModuleFunctionGroup {
         }
 
         switch -Regex ($domain) {
-            'private' { # move private functions to /Private
-                if ((Split-Path -Path $path -Parent) -ne $PrivatePath) {
-                    try {
-                        Move-Item -Path $path -Destination $PrivatePath
+            'private' { # move private functions to /private/$role except module helpers
+                [string] $PrivateRolePath = Join-Path -Path $PrivatePath -ChildPath $role
 
-                        Write-Verbose -Message "Moved $name to $PrivatePath"
+                # split module helpers out of the sub-folder sorting logic and place them in private/
+                if ($role -eq 'helper') {
+                    if ((Split-Path -Path $path -Parent) -ne $PrivatePath) {
+                        try {
+                            Move-Item -Path $path -Destination $PrivatePath
+                            Write-Verbose -Message "Moved $name to $PrivatePath"
+                        } catch {
+                            Write-Warning -Message "Could not move private function $name"
+                        }    
+                    }
+                } elseif ((Split-Path -Path $path -Parent) -ne $PrivateRolePath) {
+                    try {
+                        if (-not (Test-Path -Path $PrivateRolePath)) {
+                            New-Item -ItemType Directory -Path $PrivateRolePath -Force | Out-Null
+                        }
+
+                        Move-Item -Path $path -Destination $PrivateRolePath
+
+                        Write-Verbose -Message "Moved $name to $PrivateRolePath"
                     } catch {
                         Write-Warning -Message "Could not move private function $name"
                     }
+                } else { # this is a defensive catch for functions missing sorting metadata
+                    $UnknownPath = Join-Path -Path $PrivatePath -ChildPath 'unknown'
+
+                    if (-not (Test-Path -Path $UnknownPath)) {
+                        New-Item -ItemType Directory -Path $UnknownPath -Force | Out-Null
+                    }
+
+                    Move-Item -Path $path -Destination $UnknownPath
+
+                    Write-Warning -Message "Function $name is missing role metadata - moving to unknown"
                 }
             }
-            'public'  { # move Public functions to role named folders
+            'public'  { # move public functions to role named folders
                 [string] $RolePath = Join-Path -Path $RootPath -ChildPath $role
 
                 if ((Split-Path -Path $path -Parent) -ne $RolePath) {
