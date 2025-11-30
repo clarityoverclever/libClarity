@@ -22,11 +22,11 @@ appropriate private implementation.
 (Optional) Override automatic OS detection. Valid values: Windows, Linux, MacOS.
 
 .EXAMPLE
-New-CredentialToFile
+Export-CredentialToFile
 Stores credentials using the default method for the current OS.
 
 .EXAMPLE
-New-CredentialToFile -Platform Windows
+Export-CredentialToFile -Platform Windows
 Forces use of the Windows-specific implementation.
 #>
 

@@ -9,7 +9,7 @@
 
 <#
 .SYNOPSIS
-Creates a local file to store secure credentials in a cross-platform way.
+platform agnostic method to decrypt and read a SecureString from a credential object
 
 .DESCRIPTION
 On Windows, credentials are protected using DPAPI.
@@ -22,7 +22,7 @@ appropriate private implementation.
 (Optional) Override automatic OS detection. Valid values: Windows, Linux, MacOS.
 
 .EXAMPLE
-New-CredentialToFile
+Read-Credential
 Stores credentials using the default method for the current OS.
 
 .EXAMPLE
@@ -34,19 +34,21 @@ function Read-Credential {
     [CmdletBinding()]
     param(
         [ValidateSet("Windows", "Linux", "MacOS")]
-        [string] $Platform
+        [string] $Platform,
+
+        [pscredential] $Credential
     )
 
     if ($Platform) {
         switch ($Platform) {
-            "Windows" { return Read-CredentialWindows }
-            "Linux"   { return Read-CredentialCore }
+            "Windows" { return Read-CredentialWindows -Credential $Credential }
+            "Linux"   { return Read-CredentialCore -Credential $Credential }
         }
     } else {
         if ($IsWindows) {
             return Read-CredentialWindows 
         } elseif ($IsLinux -or $IsMacOS) {
-            return Read-CredentialCore
+            return Read-CredentialCore -Credential $Credential 
         } else {
             throw "Unsupported OS: $($_)"
         }

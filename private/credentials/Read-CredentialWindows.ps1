@@ -13,6 +13,11 @@ function Read-CredentialWindows {
         [pscredential] $Credential
     )
 
+    # validate the credential object
+    if (-not ($Credential -is [System.Management.Automation.PSCredential])) {
+        throw "Parameter must be a PSCredential object."
+    }
+    
     try {
         $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)
         return $Credential.UserName, [System.String][Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)   

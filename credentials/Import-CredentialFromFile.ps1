@@ -9,7 +9,7 @@
 
 <#
 .SYNOPSIS
-Imports a secure credentials from a local file created by New-CredntialToFile.
+Imports a secure credentials from a local file created by Export-CredntialToFile.
 
 .DESCRIPTION
 On Windows, credentials are protected using DPAPI.

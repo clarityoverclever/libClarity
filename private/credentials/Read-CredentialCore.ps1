@@ -13,6 +13,11 @@ function Read-CredentialLinux {
         [pscredential] $Credential
     )
 
+    # validate the credential object
+    if (-not ($Credential -is [System.Management.Automation.PSCredential])) {
+        throw "Parameter must be a PSCredential object."
+    }
+    
     # NetworkCredential unwraps a SecureString consistently across Windows, Linux, macOS
     $plain = [system.String][System.Net.NetworkCredential]::new('', $Credential.Password).Password
 
